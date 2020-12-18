@@ -1,74 +1,114 @@
-import pygame
-# Initialize program
+import pygame, sys
+
+# Setup pygame/window ---------------------------------------- #
+mainClock = pygame.time.Clock()
+from pygame.locals import *
+# Initialize pygame engine
 pygame.init()
-
-# Create game screen
+# Set the caption and image for top bar of window
+pygame.display.set_caption('Tower of Hanoi')
 screen = pygame.display.set_mode((800, 600))
-
-# Background
-background = pygame.image.load('background (1).png')
-
-# Title and Icon on top of the window (Bar)s
-pygame.display.set_caption("Tower of Hanoi")
-icon = pygame.image.load('penguin.png')
+icon = pygame.image.load('assets/signal-tower.png')
 pygame.display.set_icon(icon)
 
-# Player
-playerImg = pygame.image.load('Blue_disk.png')
-playerX = 200
-playerY = 200
-playerX_change = 0
-playerY_change = 0
+# Custom Font
+font = pygame.font.SysFont(None, 40)
+
+# This function takes parameters and draws a text
 
 
-def player(x , y):
-    screen.blit(playerImg, (x, y))
-
-# Game Loop **ALL Components Go inside here for workflow**
-running = True
-while running:
-
-    screen.fill((255, 153, 153))
-    # Background Image
-    screen.blit(background, (0, 0))
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                playerX_change = -0.2
-            if event.key == pygame.K_RIGHT:
-                playerX_change = 0.2
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                playerY_change = -0.2
-            if event.key == pygame.K_DOWN:
-                playerY_change = 0.2
-
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                playerX_change = 0
-            if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                playerY_change = 0
+def draw_text(text, font, color, surface, x, y):
+    textobj = font.render(text, 1, color)
+    textrect = textobj.get_rect()
+    textrect.topleft = (x, y)
+    surface.blit(textobj, textrect)
 
 
+click = False
 
-    # RGB Sets background color for screen
-    playerY += playerY_change
-    playerX += playerX_change
+# Function for the main menu (1st window upon entering
 
-    if playerX <= 0:
-        playerX = 0
-    elif playerX >= 736:
-        playerX = 736
+# Main Menu (DO NOT TOUCH)
 
-    if playerY <= 0:
-        playerY = 0
-    elif playerY >= 280:
-        playerY = 280
 
-    player(playerX, playerY)
-    pygame.display.update()
+def main_menu():
+    while True:
+
+        screen.fill((0, 0, 0))
+        background = pygame.image.load('assets/Background Menu Image.png')
+        screen.blit(background, (0, 0))
+        draw_text('Main Menu', font, (255, 255, 255), screen, 20, 20)
+        draw_text('Press ESC to exit', font, (255, 255, 255), screen, 20, 565)
+        mx, my = pygame.mouse.get_pos()
+        # Draw text and button for entry to game function
+        draw_text('Play Game', font, (255, 255, 255), screen, 50, 75)
+        button_1 = pygame.Rect(50, 110, 200, 50)
+        # Draw text and button for entry to options function
+        button_2 = pygame.Rect(50, 210, 200, 50)
+        draw_text('Options', font, (255, 255, 255), screen, 50, 175)
+
+        if button_1.collidepoint((mx, my)):
+            if click:
+                game()
+        if button_2.collidepoint((mx, my)):
+            if click:
+                options()
+        pygame.draw.rect(screen, (255, 0, 0), button_1)
+        pygame.draw.rect(screen, (255, 0, 0), button_2)
+
+        click = False
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        pygame.display.update()
+        mainClock.tick(60)
+
+
+def game():
+    running = True
+    while running:
+        # Load Background Image
+        background = pygame.image.load('assets/background (1).png')
+        screen.blit(background, (0, 0))
+        draw_text('Game', font, (255, 255, 255), screen, 20, 20)
+        draw_text('Press ESC to exit', font, (255, 255, 255), screen, 20, 565)
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+        pygame.display.update()
+        mainClock.tick(60)
+
+
+def options():
+    running = True
+    while running:
+        # Load Background Image
+        background = pygame.image.load('assets/options.png')
+        screen.blit(background, (0, 0))
+        draw_text('Options', font, (255, 255, 255), screen, 20, 20)
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+        draw_text('Press ESC to exit', font, (255, 255, 255), screen, 20, 565)
+        pygame.display.update()
+        mainClock.tick(60)
+
+
+main_menu()
