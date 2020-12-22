@@ -15,7 +15,6 @@ font = pygame.font.SysFont(None, 40)
 black = 0, 0, 0
 white = (255, 255, 255)
 
-
 # This function takes parameters and draws a text
 def draw_text(text, font, color, surface, x, y):
     textobj = font.render(text, 1, color)
@@ -38,13 +37,13 @@ def main_menu():
         screen.blit(background, (0, 0))
         draw_text('Main Menu', font, (255, 255, 255), screen, 20, 20)
         draw_text('Press ESC to exit', font, (255, 255, 255), screen, 20, 565)
-        mx, my = pygame.mouse.get_pos()
-        # Draw text and button for entry to game function
         draw_text('Play Game', font, (255, 255, 255), screen, 50, 75)
-        button_1 = pygame.Rect(50, 110, 200, 50)
-        # Draw text and button for entry to options function
-        button_2 = pygame.Rect(50, 210, 200, 50)
         draw_text('Options', font, (255, 255, 255), screen, 50, 175)
+
+        # Get Position of mouse
+        mx, my = pygame.mouse.get_pos()
+        button_1 = pygame.Rect(50, 110, 200, 50)
+        button_2 = pygame.Rect(50, 210, 200, 50)
 
         if button_1.collidepoint((mx, my)):
             if click:
@@ -113,8 +112,19 @@ def options():
         screen.blit(background, (0, 0))
         draw_text('Options', font, white, screen, 20, 20)
         draw_text('Choose the number of plates you want', font, white, screen, 150, 100)
+        draw_text('Press ESC to exit', font, (255, 255, 255), screen, 20, 565)
+        draw_text('3 Disks - ', font, white, screen, x, 200)
+        draw_text('4 Disks - ', font, white, screen, x, 300)
+        draw_text('5 Disks - ', font, white, screen, x, 400)
 
         click = False
+        # Button to generate the number of plates
+        mark_x, mark_y = pygame.mouse.get_pos()
+
+        button_1 = pygame.Rect(x_btn, 200, 25, 25)
+        button_2 = pygame.Rect(x_btn, 300, 25, 25)
+        button_3 = pygame.Rect(x_btn, 400, 25, 25)
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -122,39 +132,26 @@ def options():
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     running = False
-        draw_text('Press ESC to exit', font, (255, 255, 255), screen, 20, 565)
-        draw_text('3 Disks - ', font, white, screen, x, 200)
-        draw_text('4 Disks - ', font, white, screen, x, 300)
-        draw_text('5 Disks - ', font, white, screen, x, 400)
-
-        mx, my = pygame.mouse.get_pos()
-
-        button_1 = pygame.Rect(x_btn, 200, 25, 25)
-        button_2 = pygame.Rect(x_btn, 300, 25, 25)
-        button_3 = pygame.Rect(x_btn, 400, 25, 25)
-
-        click = False
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
-        if button_1.collidepoint((mx, my)):
-            if click:
-                draw_text('You chose 3 disks', font, white, screen, x, 100)
-                pygame.display.update()
+            if button_1.collidepoint((mark_x, mark_y)):
+                if click:
+                    draw_text('You chose 3 disks', font, white, screen, x-25, 450)
+                    print('3')
+                    pygame.display.update()
+                    # Return 3
+            if button_2.collidepoint((mark_x, mark_y)):
+                if click:
+                    draw_text('You chose 4 disks', font, white, screen, x-25, 450)
+                    print('4')
+                    # Return 4
+            if button_3.collidepoint((mark_x, mark_y)):
+                if click:
+                    draw_text('You chose 5 disks', font, white, screen, x, 450)
+                    print('5')
+                    # Return 5
 
-                # Return 3
-        if button_2.collidepoint((mx, my)):
-            if click:
-                draw_text('You chose 4 disks', font, white, screen, x, 450)
-                # Return 4
-        if button_3.collidepoint((mx, my)):
-            if click:
-                draw_text('You chose 5 disks', font, white, screen, x, 450)
-                # Return 5
         pygame.draw.rect(screen, white, button_1)
         pygame.draw.rect(screen, white, button_2)
         pygame.draw.rect(screen, white, button_3)
