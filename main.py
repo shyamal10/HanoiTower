@@ -15,6 +15,9 @@ font = pygame.font.SysFont(None, 40)
 black = 0, 0, 0
 white = (255, 255, 255)
 
+number_of_plates = 3
+minimumMoves = 7
+
 # This function takes parameters and draws a text
 def draw_text(text, font, color, surface, x, y):
     textobj = font.render(text, 1, color)
@@ -35,10 +38,10 @@ def main_menu():
         background = pygame.image.load('assets/Background Menu Image.png')
 
         screen.blit(background, (0, 0))
-        draw_text('Main Menu', font, (255, 255, 255), screen, 20, 20)
-        draw_text('Press ESC to exit', font, (255, 255, 255), screen, 20, 565)
-        draw_text('Play Game', font, (255, 255, 255), screen, 50, 75)
-        draw_text('Options', font, (255, 255, 255), screen, 50, 175)
+        draw_text('Main Menu', font, white, screen, 20, 20)
+        draw_text('Press ESC to exit', font, white, screen, 20, 565)
+        draw_text('Play Game', font, white, screen, 50, 75)
+        draw_text('Options', font, white, screen, 50, 175)
 
         # Get Position of mouse
         mx, my = pygame.mouse.get_pos()
@@ -85,8 +88,11 @@ def game():
         screen.blit(stick, (20, 75))
         screen.blit(stick, (620, 75))
         # Draw text
-        draw_text('Game', font, (255, 255, 255), screen, 20, 20)
-        draw_text('Press ESC to exit', font, (255, 255, 255), screen, 20, 565)
+        draw_text('Game', font, white, screen, 20, 20)
+        draw_text('Press ESC to exit', font, white, screen, 20, 565)
+        draw_text('Minimum number of moves: ', font, white, screen, 350, 20)
+        draw_text(str(minimumMoves), font, white, screen, 755, 20)
+
         # Main Game Loop
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -106,13 +112,14 @@ def options():
     running = True
     x = 300
     x_btn = 425
+
     while running:
         # Load Background Image
         background = pygame.image.load('assets/menu.jpg')
         screen.blit(background, (0, 0))
         draw_text('Options', font, white, screen, 20, 20)
         draw_text('Choose the number of plates you want', font, white, screen, 150, 100)
-        draw_text('Press ESC to exit', font, (255, 255, 255), screen, 20, 565)
+        draw_text('Press ESC to exit', font, white, screen, 20, 565)
         draw_text('3 Disks - ', font, white, screen, x, 200)
         draw_text('4 Disks - ', font, white, screen, x, 300)
         draw_text('5 Disks - ', font, white, screen, x, 400)
@@ -124,7 +131,6 @@ def options():
         button_1 = pygame.Rect(x_btn, 200, 25, 25)
         button_2 = pygame.Rect(x_btn, 300, 25, 25)
         button_3 = pygame.Rect(x_btn, 400, 25, 25)
-
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -137,19 +143,24 @@ def options():
                     click = True
             if button_1.collidepoint((mark_x, mark_y)):
                 if click:
-                    draw_text('You chose 3 disks', font, white, screen, x-25, 450)
+                    draw_text('You chose 3 disks', font, white, screen, x - 25, 450)
                     print('3')
-                    pygame.display.update()
+                    number_of_plates = 3
+                    minimumMoves = min_moves(number_of_plates)
                     # Return 3
             if button_2.collidepoint((mark_x, mark_y)):
                 if click:
-                    draw_text('You chose 4 disks', font, white, screen, x-25, 450)
+                    draw_text('You chose 4 disks', font, white, screen, x - 25, 450)
                     print('4')
+                    number_of_plates = 4
+                    minimumMoves = min_moves(number_of_plates)
                     # Return 4
             if button_3.collidepoint((mark_x, mark_y)):
                 if click:
-                    draw_text('You chose 5 disks', font, white, screen, x, 450)
+                    draw_text('You chose 5 disks', font, white, screen, x - 25, 450)
                     print('5')
+                    number_of_plates = 5
+                    minimumMoves = min_moves(number_of_plates)
                     # Return 5
 
         pygame.draw.rect(screen, white, button_1)
@@ -183,5 +194,11 @@ def pause():
         mainClock.tick(5)
 
 
-main_menu()
+# Calculate and return min number of moves needed
+def min_moves(num):
+    # min number of moves = (2^n) - 1, n = number of plates
+    minNumber = (2**num) - 1
+    print(minNumber)
 
+
+main_menu()
