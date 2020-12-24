@@ -14,10 +14,10 @@ pygame.display.set_icon(icon)
 font = pygame.font.SysFont(None, 40)
 black = 0, 0, 0
 white = (255, 255, 255)
-
+# Global variables used throughout the program
 number_of_plates = 3
 
-minimumMoves = 0
+minimumMoves = 7
 
 
 # Calculate and return min number of moves needed
@@ -35,8 +35,8 @@ def draw_text(text, font, color, surface, x, y):
 
 
 click = False
-
 run = True
+pauseQuit = False
 
 
 # Function for the main menu
@@ -55,7 +55,6 @@ def main_menu():
         mx, my = pygame.mouse.get_pos()
         button_1 = pygame.Rect(50, 110, 200, 50)
         button_2 = pygame.Rect(50, 210, 200, 50)
-
         if button_1.collidepoint((mx, my)):
             if click:
                 game()
@@ -98,7 +97,7 @@ def options():
         draw_text('3 Disks - ', font, white, screen, x, 200)
         draw_text('4 Disks - ', font, white, screen, x, 300)
         draw_text('5 Disks - ', font, white, screen, x, 400)
-
+        draw_text('Help - ', font, white, screen, x, 500)
         click = False
         # Button to generate the number of plates
         mark_x, mark_y = pygame.mouse.get_pos()
@@ -106,6 +105,7 @@ def options():
         button_1 = pygame.Rect(x_btn, 200, 25, 25)
         button_2 = pygame.Rect(x_btn, 300, 25, 25)
         button_3 = pygame.Rect(x_btn, 400, 25, 25)
+        help_btn = pygame.Rect(x_btn, 500, 25, 25)
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -140,18 +140,28 @@ def options():
                     print('in options loop: ')
                     print(minimumMoves)
                     # Return 5
+            if help_btn.collidepoint((mark_x, mark_y)):
+                if click:
+                    print('Success!')
+                    help_menu()
 
         pygame.draw.rect(screen, white, button_1)
         pygame.draw.rect(screen, white, button_2)
         pygame.draw.rect(screen, white, button_3)
-
+        pygame.draw.rect(screen, white, help_btn)
         pygame.display.update()
         mainClock.tick(60)
+
+
+stick1_Location = (30, 75)
+stick2_Location = (330, 75)
+stick3_Location = (630, 75)
 
 
 # Main game loop
 def game():
     running = True
+    global pauseQuit
     while running:
         # Load Background Image
         background = pygame.image.load('assets/background (1).png')
@@ -159,24 +169,30 @@ def game():
         # Load Stick Images onto screen
         stick = pygame.image.load('assets/Stick_Object_1.png')
         screen.blit(background, (0, 0))
-        screen.blit(stick, (320, 75))
-        screen.blit(stick, (20, 75))
-        screen.blit(stick, (620, 75))
+        screen.blit(stick, stick1_Location)
+        screen.blit(stick, stick2_Location)
+        screen.blit(stick, stick3_Location)
+        mx, my = pygame.mouse.get_pos()
+        print(mx, my)
+
         # Draw text
         draw_text('Game', font, white, screen, 20, 20)
-        draw_text('Press ESC to exit', font, white, screen, 20, 565)
         draw_text('Minimum number of moves: ', font, white, screen, 350, 20)
-        draw_text(str(minimumMoves), font, white, screen, 755, 20)
-       # Main Game Loop
+        draw_text(str(minimumMoves), font, white, screen, 735, 20)
+        generate_3plates()
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    running = False
+                #if event.key == K_ESCAPE:
+                    #running = False
                 if event.key == K_p:
                     pause()
+            if pauseQuit:
+                running = False
+                pauseQuit = False
+
         pygame.display.update()
         mainClock.tick(60)
 
@@ -184,6 +200,7 @@ def game():
 # Pause menu screen
 def pause():
     paused = True
+    global pauseQuit
 
     while paused:
         for event in pygame.event.get():
@@ -194,6 +211,9 @@ def pause():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
                     paused = False
+                if event.key == pygame.K_ESCAPE:
+                    pauseQuit = True
+                    paused = False
 
         draw_text('Paused', font, black, screen, 315, 50)
 
@@ -202,6 +222,43 @@ def pause():
 
         pygame.display.update()
         mainClock.tick(5)
+
+
+# Help Menu
+def help_menu():
+    running = True
+    while running:
+        background = pygame.image.load('assets/help.jpg')
+
+        screen.blit(background, (0, 0))
+        draw_text('Help Menu', font, white, screen, 20, 20)
+        draw_text('Press ESC to exit', font, white, screen, 20, 565)
+        draw_text('Designer: Édouard Lucas, 1883', font, white, screen, 20, 100)
+        draw_text('This is a math puzzle', font, white, screen, 20, 200)
+        draw_text('It starts with the disks in a neat stack in ascending order', font, white, screen, 20, 300)
+        draw_text('Move the entire stack to another rod with least moves', font, white, screen, 20, 400)
+        draw_text('Made by Shyamal Singh and Phillip Le', font, white, screen, 275, 565)
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.key == K_ESCAPE:
+                    running = False
+        pygame.display.update()
+
+
+# Generates 3 plates onto rod 1
+def generate_3plates():
+    plate1 = pygame.image.load('assets/3Plates/Top.png')
+    plate2 = pygame.image.load('assets/3Plates/Middle.png')
+    plate3 = pygame.image.load('assets/3Plates/Bottom.png')
+
+    screen.blit(plate1, (56, 425))
+    screen.blit(plate2, (28, 450))
+    screen.blit(plate3, (18, 475))
+
+    #pygame.display.update()
 
 
 main_menu()
