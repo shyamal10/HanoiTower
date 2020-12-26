@@ -16,8 +16,10 @@ black = 0, 0, 0
 white = (255, 255, 255)
 # Global variables used throughout the program
 number_of_plates = 3
-
 minimumMoves = 7
+
+rectangle = pygame.rect.Rect(40, 505, 100, 25)
+rectangle_draging = False
 
 
 # Calculate and return min number of moves needed
@@ -179,7 +181,6 @@ def game():
         draw_text('Game', font, white, screen, 20, 20)
         draw_text('Minimum number of moves: ', font, white, screen, 350, 20)
         draw_text(str(minimumMoves), font, white, screen, 735, 20)
-        generate_3plates()
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -192,7 +193,22 @@ def game():
             if pauseQuit:
                 running = False
                 pauseQuit = False
-
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if rectangle.collidepoint(event.pos):
+                        rectangle_draging = True
+                        mouse_x, mouse_y = event.pos
+                        offset_x = rectangle.x - mouse_x
+                        offset_y = rectangle.y - mouse_y
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    rectangle_draging = False
+            if event.type == pygame.MOUSEMOTION:
+                if rectangle_draging:
+                    mouse_x, mouse_y = event.pos
+                    rectangle.x = mouse_x + offset_x
+                    rectangle.y = mouse_y + offset_y
+        pygame.draw.rect(screen, white, rectangle)
         pygame.display.update()
         mainClock.tick(60)
 
@@ -254,9 +270,9 @@ def generate_3plates():
     plate2 = pygame.image.load('assets/3Plates/Middle.png')
     plate3 = pygame.image.load('assets/3Plates/Bottom.png')
 
-    screen.blit(plate1, (56, 425))
-    screen.blit(plate2, (28, 450))
-    screen.blit(plate3, (18, 475))
+    screen.blit(plate1, (58, 425))
+    screen.blit(plate2, (28, 445))
+    screen.blit(plate3, (18, 465))
 
     #pygame.display.update()
 
