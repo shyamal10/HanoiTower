@@ -17,10 +17,14 @@ white = (255, 255, 255)
 # Global variables used throughout the program
 number_of_plates = 3
 minimumMoves = 7
-
-rectangle = pygame.rect.Rect(40, 505, 100, 25)
+score = 0
+user_choice = 3
+rectangle = pygame.rect.Rect(40, 508, 100, 25)
 rectangle_draging = False
 
+rectangle2 = pygame.rect.Rect(55, 481, 65, 25)
+rectangle3 = pygame.rect.Rect(73, 453.5, 30, 25)
+stick_bottom_y = 75
 
 # Calculate and return min number of moves needed
 def min_moves(num):
@@ -89,6 +93,7 @@ def options():
     x = 300
     x_btn = 425
     global minimumMoves
+    global user_choice
     while running:
         # Load Background Image
         background = pygame.image.load('assets/menu.jpg')
@@ -176,11 +181,15 @@ def game():
         screen.blit(stick, stick3_Location)
         mx, my = pygame.mouse.get_pos()
         print(mx, my)
-
+        pygame.draw.rect(screen, white, rectangle)
+        pygame.draw.rect(screen, white, rectangle2)
+        pygame.draw.rect(screen, white, rectangle3)
         # Draw text
         draw_text('Game', font, white, screen, 20, 20)
         draw_text('Minimum number of moves: ', font, white, screen, 350, 20)
         draw_text(str(minimumMoves), font, white, screen, 735, 20)
+        draw_text('Moves: ', font, white, screen, 625, 60)
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -208,7 +217,6 @@ def game():
                     mouse_x, mouse_y = event.pos
                     rectangle.x = mouse_x + offset_x
                     rectangle.y = mouse_y + offset_y
-        pygame.draw.rect(screen, white, rectangle)
         pygame.display.update()
         mainClock.tick(60)
 
@@ -266,13 +274,13 @@ def help_menu():
 
 # Generates 3 plates onto rod 1
 def generate_3plates():
-    plate1 = pygame.image.load('assets/3Plates/Top.png')
-    plate2 = pygame.image.load('assets/3Plates/Middle.png')
-    plate3 = pygame.image.load('assets/3Plates/Bottom.png')
-
-    screen.blit(plate1, (58, 425))
-    screen.blit(plate2, (28, 445))
-    screen.blit(plate3, (18, 465))
+    #plate1 = pygame.image.load('assets/3Plates/Top.png')
+    #plate2 = pygame.image.load('assets/3Plates/Middle.png')
+    #plate3 = pygame.image.load('assets/3Plates/Bottom.png')
+    two = 3
+    #screen.blit(plate1, (58, 425))
+    #screen.blit(plate2, (28, 445))
+    #screen.blit(plate3, (18, 465))
 
     #pygame.display.update()
 
